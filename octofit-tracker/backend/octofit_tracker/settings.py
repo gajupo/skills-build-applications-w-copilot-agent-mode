@@ -97,12 +97,33 @@ DATABASES = {
 CSRF_TRUSTED_ORIGINS = ['https://*.app.github.dev']
 
 # CORS settings
+import re
+
 CORS_ALLOW_ALL_ORIGINS = False
+
+# Build the CORS allowed origins list
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8000',
+]
+
+# Add GitHub Codespaces URLs if available
+if os.environ.get('CODESPACE_NAME'):
+    codespace_name = os.environ.get('CODESPACE_NAME')
+    CORS_ALLOWED_ORIGINS.extend([
+        f'https://{codespace_name}-3000.app.github.dev',
+        f'https://{codespace_name}-8000.app.github.dev',
+        f'http://{codespace_name}-3000.app.github.dev',
+        f'http://{codespace_name}-8000.app.github.dev',
+    ])
+
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^https://.*\.app\.github\.dev$',
-    r'^http://localhost:\d+$',
-    r'^http://127\.0\.0\.1:\d+$',
+    r'^http://.*\.app\.github\.dev$',
 ]
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -167,4 +188,4 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

@@ -14,8 +14,15 @@ const Teams = () => {
         const url = `${protocol}://${host}/api/teams/`;
         
         console.log('Fetching Teams from:', url);
+        console.log('Codespace Name:', codespaceName);
         
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
