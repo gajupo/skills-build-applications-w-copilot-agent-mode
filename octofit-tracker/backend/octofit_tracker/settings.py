@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 if os.environ.get('CODESPACE_NAME'):
     ALLOWED_HOSTS.append(f"{os.environ.get('CODESPACE_NAME')}-8000.app.github.dev")
+ALLOWED_HOSTS.append('.app.github.dev')
 
 
 # Application definition
@@ -92,11 +93,36 @@ DATABASES = {
     }
 }
 
+# Trust GitHub Codespaces HTTPS origins (needed for Django's CSRF checks on HTTPS)
+CSRF_TRUSTED_ORIGINS = ['https://*.app.github.dev']
+
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://.*\.app\.github\.dev$',
+    r'^http://localhost:\d+$',
+    r'^http://127\.0\.0\.1:\d+$',
+]
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['*']
-CORS_ALLOW_METHODS = ['*']
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 # Use custom user model
 AUTH_USER_MODEL = 'octofit_tracker.User'
